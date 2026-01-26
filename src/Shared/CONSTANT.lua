@@ -53,6 +53,18 @@ local CONSTANTS = {
 		"Keep new-player onboarding under 2 minutes.",
 		"Player-made recipes = fun user-generated content!",
 	},
+	PLAYER = {
+		ATTRIBUTE = {
+			_OWNER = "OWNER",
+			LEVEL = "_LEVEL",
+			EXP = "_EXP",
+			ZOOM = "_ZOOM",
+			BALANCE = {
+				MONEY = "MONEY",
+				GOLD = "GOLD",
+			},
+		},
+	},
 
 }
 

@@ -149,15 +149,12 @@ local Queue: any = {
 export type data = any
 export type player = any
 export type version = number
-export type increaseLvl = number
-export type upgradeType = number
-export type quantity = number
-export type addEggFrom = number
-export type index = number
-export type name = string
+export type Garden_slot = number
 
 
 
 return {
+	Garden = {
+	},
 
 }

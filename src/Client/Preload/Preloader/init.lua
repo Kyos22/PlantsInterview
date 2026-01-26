@@ -8,6 +8,7 @@ local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 local Packages = ReplicatedStorage:WaitForChild("Packages")
 
+local Client = require(ReplicatedStorage.Shared.Network.Client)
 local Promise = require(Packages.Promise)
 local Signal = require(Packages.Signal)
 local Loading = require(script.Loading)
@@ -105,6 +106,11 @@ function Class:Load()
 			
 			self.LoadingGui:SetProgress(1)
 			task.wait(0.5)
+			local success = Client.Preload.Invoke()
+			if not success then
+				warn("Failed to preload restaurant")
+				return
+			end
 			self.LoadingGui:End()
 		end)		
 	end)

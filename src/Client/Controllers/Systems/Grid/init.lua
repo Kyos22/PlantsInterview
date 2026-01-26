@@ -1,25 +1,34 @@
--- -- StarterPlayerScripts/GridClickDebugger.client.lua
+--!strict
+
+-->> Services
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+-->> Modules
 local GridUtil = require(ReplicatedStorage.Shared.GridUtil)
+local Yumi = require(ReplicatedStorage.Shared.Core.Yumi)
 
+-->> Inputs 
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
-
--- ====== CHỈNH ĐÚNG PATH SOIL CỦA BẠN ======
 local soil: BasePart = workspace.Plot.Soil
 local cellSize = soil:GetAttribute("CellSize") or 4
 
--- Raycast params: chỉ cho chạm Soil
+-->> Raycast
 local rayParams = RaycastParams.new()
-rayParams.FilterType = Enum.RaycastFilterType.Whitelist
+rayParams.FilterType = Enum.RaycastFilterType.Include
 rayParams.FilterDescendantsInstances = { soil }
 rayParams.IgnoreWater = true
 
--- -- (Optional) vẽ marker debug
-local function drawMarker(pos: Vector3)
+export type APIsType = {
+	connections: {[string] : RBXScriptConnection}
+}
+
+local module = {} :: APIsType & Yumi.System
+
+
+local function DrawMarker(pos: Vector3)
 	local p = Instance.new("Part")
 	p.Anchored = true
 	p.CanCollide = false
@@ -29,7 +38,7 @@ local function drawMarker(pos: Vector3)
 	game:GetService("Debris"):AddItem(p, 1.5)
 end
 
-local function handleWorldClick(screenPos: Vector2?)
+local function Click(screenPos: Vector2?)
 	-- PC: dùng mouse.Hit; Mobile: dùng screenPos -> Camera ray
 	local cam = workspace.CurrentCamera
 	if not cam then return end
@@ -53,68 +62,59 @@ local function handleWorldClick(screenPos: Vector2?)
 	end
 
 	local hitPos = result.Position
+	    print("cc", cellSize, typeof(cellSize))
 
-	-- 1) worldPos -> cell
-	local cx, cz = GridUtil.WorldToCell(soil, cellSize, hitPos)
+	if not cellSize and typeof(cellSize) == "number" then
 
-	-- 2) validate inside
-	if not GridUtil.IsCellInside(soil, cellSize, cx, cz) then
-		print(("Clicked OUTSIDE grid: cell=(%d,%d)"):format(cx, cz))
-		return
+		local cx, cz = GridUtil.WorldToCell(soil, cellSize, hitPos)
+
+		if not GridUtil.IsCellInside(soil, cellSize, cx, cz) then
+			print(("Clicked OUTSIDE grid: cell=(%d,%d)"):format(cx, cz))
+			return
+		end
+
+		local snappedWorld = GridUtil.CellToWorldCenter(soil, cellSize, cx, cz)
+
+		print(("CLICK cell=(%d, %d) | snappedWorld=(%.2f, %.2f, %.2f)"):format(
+			cx, cz,
+			snappedWorld.X, snappedWorld.Y, snappedWorld.Z
+		))
+
+		DrawMarker(snappedWorld)
 	end
 
-	-- 3) cell -> snapped center world
-	local snappedWorld = GridUtil.CellToWorldCenter(soil, cellSize, cx, cz)
-
-	-- PRINT yêu cầu của bạn:
-	print(("CLICK cell=(%d, %d) | snappedWorld=(%.2f, %.2f, %.2f)"):format(
-		cx, cz,
-		snappedWorld.X, snappedWorld.Y, snappedWorld.Z
-	))
-
-	-- debug marker để thấy snap
-	drawMarker(snappedWorld)
 end
 
--- -- PC: click chuột
--- mouse.Button1Down:Connect(function()
--- 	handleWorldClick(nil)
--- end)
+local function Destroy()
+	for _, conn in pairs(module.connections) do
+        conn:Disconnect()
+    end
+end
 
--- -- Mobile + cả PC: bắt touch/click theo screen pos (ổn định hơn)
--- UserInputService.InputBegan:Connect(function(input, processed)
--- 	if processed then return end
--- 	if input.UserInputType == Enum.UserInputType.Touch then
--- 		handleWorldClick(input.Position)
--- 	end
--- end)
---!strict
---// Service
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
---// Modules
-local Yumi = require(ReplicatedStorage.Shared.Core.Yumi)
-
---
-export type APIsType = {}
-
-local module = {} :: APIsType & Yumi.System
-
---// Yumi
-
---// APIs
 module._Start = function()
 	print("Grid Click Debugger")
-    -- PC: click chuột
     mouse.Button1Down:Connect(function()
-    handleWorldClick(nil)
+        Click(nil)
     end)
+	-- if #module.connections > 0 then
+	-- 	Destroy()
+	-- end
 
-    -- Mobile + cả PC: bắt touch/click theo screen pos (ổn định hơn)
-    UserInputService.InputBegan:Connect(function(input, processed)
-    if processed then return end
-    if input.UserInputType == Enum.UserInputType.Touch then
-    handleWorldClick(input.Position)
-    end
+	-- module.connections["Click"] = mouse.Button1Down:Connect(function()
+    --     Click(nil)
+    -- end)
+
+	-- module.connections["TouchInput"] = UserInputService.InputBegan:Connect(function(input, processed)
+    --     if processed then return end
+    --     if input.UserInputType == Enum.UserInputType.Touch then
+    --         Click(Vector2.new(input.Position.X, input.Position.Y))
+    --     end
+    -- end)
+	UserInputService.InputBegan:Connect(function(input, processed)
+        if processed then return end
+        if input.UserInputType == Enum.UserInputType.Touch then
+            Click(Vector2.new(input.Position.X, input.Position.Y))
+        end
     end)
 end
 

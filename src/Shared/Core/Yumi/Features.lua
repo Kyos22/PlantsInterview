@@ -49,6 +49,10 @@ local Features: YumiFeatures = {
 				Enabled = true,
 				Priority = 20,
 			},
+			["Garden"] = {
+				Enabled = true,
+				Priority = 20,
+			},
 		},
 
 		Server = {
@@ -61,6 +65,10 @@ local Features: YumiFeatures = {
 				Priority = 10,
 			},
 			["Player"] = {
+				Enabled = true,
+				Priority = 10,
+			},
+			["Garden"] = {
 				Enabled = true,
 				Priority = 10,
 			},

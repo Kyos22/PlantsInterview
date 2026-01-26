@@ -5,15 +5,18 @@ export declare const StepReplication: () => void
 type data = unknown
 type player = unknown
 type version = number
-type increaseLvl = number
-type upgradeType = number
-type quantity = number
-type addEggFrom = number
-type index = number
-type name = string
 export declare const ProfileUpdated: {
 	On: (Listener: (Value1: unknown, Value2: number | undefined) => void) => (() => void)
 }
 export declare const GetProfile: {
 	Invoke: (Value: void) => LuaTuple<[unknown, number | undefined]>
+}
+export declare const Preload: {
+	Invoke: (Value: void) => boolean
+}
+export declare namespace Garden {
+	type slot = number
+	export const Init: {
+		On: (Listener: (Value: number) => void) => (() => void)
+	}
 }

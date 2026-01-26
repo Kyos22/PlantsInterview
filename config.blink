@@ -9,23 +9,12 @@ option Typescript = true
 type data = unknown
 type player = unknown
 type version = i32
-type increaseLvl = u8 -- Một lần nâng bao nhiêu level (1, 10, 100)
-type upgradeType = u8 -- Nâng cấp cái gì? Định nghĩa trong file Shared/General/UpgradeType.luau
 
 
-type quantity = u8
-type addEggFrom = u8 -- 0: Hand, 1: Conveyor
 
-
-type index = u8
-type name = string
-
--- INTEGRATION TESTING
 
 
 ----PlayerProfile
-
-
 
 event ProfileUpdated {
     From: Server,
@@ -37,4 +26,22 @@ event ProfileUpdated {
 function GetProfile {
     Yield: Coroutine,
     Return: (data, version?),
+}
+
+function Preload {
+    Yield: Coroutine,
+    Return: boolean,
+}
+
+
+--  Garden
+scope Garden {
+    type slot = u16
+
+    event Init {
+        From: Server,
+        Type: Reliable,
+        Call: ManyAsync,
+        Data: slot,
+    }
 }
