@@ -1,0 +1,24 @@
+[package]
+name = "admin/knit-tutorial"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+# selene = "Kampfkarren/selene@^0.26.1"
+ZonePlus = "mattschrubb/zoneplus@^3.2.0"
+Future = "red-blox/future@^1.0.0"
+Promise = "red-blox/promise@^1.0.0"
+Signal = "sleitnick/signal@^2.0.3"
+Octo = "sleitnick/octo-tree@0.3.1"
+Quaternion = "sleitnick/quaternion@0.2.3"
+ObjectCache = "pyseph/objectcache@1.4.6"
+Spring = "sleitnick/spring@1.0.0"
+Sift = "csqrl/sift@0.0.11"
+LemonSignal = "data-oriented-house/lemonsignal@1.11.0"
+RthroScaler = "egomoose/rthro-scaler@0.3.0"
+Callback = "vtntgaming/callback@1.1.0"
+
+[server-dependencies]
+SheetValues = "boatbomber/sheetvalues@3.0.2"
+ProfileStore = "lm-loleris/profilestore@1.0.3"

@@ -1,0 +1,156 @@
+-- --// Services
+-- local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- --// Modules
+-- local DisplaySystem = require(ReplicatedStorage.Controllers.Systems.Display)
+
+-- --// Interface
+-- local interface = {} :: DisplaySystem.APIsType
+
+-- ---->> Transition
+-- interface.Transition = {}
+-- interface.Transition.Open = function(...)
+--     return DisplaySystem.Transition.Open(...)
+-- end
+-- interface.Transition.Close = function(...)
+--     return DisplaySystem.Transition.Close(...)
+-- end
+-- interface.Transition.ChangeIcon = function(...)
+--     return DisplaySystem.Transition.ChangeIcon(...)
+-- end
+
+-- ---->> Alert
+-- interface.Alert = {}
+-- interface.Alert.Open = function(...)
+--     return DisplaySystem.Alert.Open(...)
+-- end
+-- interface.Alert.Close = function(...)
+--     return DisplaySystem.Alert.Close(...)
+-- end
+-- interface.Alert.Alert = function(...)
+--     return DisplaySystem.Alert.Alert(...)
+-- end
+
+-- ---->> Collect
+-- interface.Collect = {}
+-- interface.Collect.Collector = DisplaySystem.Collect.Collector
+-- interface.Collect.Open = function(...)
+--     return DisplaySystem.Collect.Open(...)
+-- end
+-- interface.Collect.Close = function(...)
+--     return DisplaySystem.Collect.Close(...)
+-- end
+-- interface.Collect.ResolveVisibility = function(...)
+--     return DisplaySystem.Collect.ResolveVisibility(...)
+-- end
+-- interface.Collect.Spawn = function(...)
+--     return DisplaySystem.Collect.Spawn(...)
+-- end
+
+-- ---->> Visor
+-- interface.Visor = {}
+-- interface.Visor.Open = function(...)
+--     return DisplaySystem.Visor.Open(...)
+-- end
+-- interface.Visor.Close = function(...)
+--     return DisplaySystem.Visor.Close(...)
+-- end
+
+-- ---->> Wallet
+-- interface.Wallet = {}
+-- interface.Wallet.Open = function(...)
+--     return DisplaySystem.Wallet.Open(...)
+-- end
+-- interface.Wallet.Close = function(...)
+--     return DisplaySystem.Wallet.Close(...)
+-- end
+-- interface.Wallet.ResolveVisibility = function(...)
+--     return DisplaySystem.Wallet.ResolveVisibility(...)
+-- end
+
+-- ---->> Tooltip
+-- interface.Tooltip = {}
+-- interface.Tooltip.Open = function(...)
+--     return DisplaySystem.Tooltip.Open(...)
+-- end
+-- interface.Tooltip.Close = function(...)
+--     return DisplaySystem.Tooltip.Close(...)
+-- end
+-- interface.Tooltip.ChangeText = function(...)
+--     return DisplaySystem.Tooltip.ChangeText(...)
+-- end
+
+-- ---->> Cook
+-- interface.Cook = {}
+-- interface.Cook.Open = function(...)
+--     return DisplaySystem.Cook.Open(...)
+-- end
+-- interface.Cook.Close = function(...)
+--     return DisplaySystem.Cook.Close(...)
+-- end
+
+-- ---->> Market
+-- interface.Market = {}
+-- interface.Market.Open = function(...)
+--     return DisplaySystem.Market.Open(...)
+-- end
+-- interface.Market.Close = function(...)
+--     return DisplaySystem.Market.Close(...)
+-- end
+
+-- ---->> Build
+-- interface.Build = {}
+-- interface.Build.Open = function(...)
+--     return DisplaySystem.Build.Open(...)
+-- end
+-- interface.Build.Close = function(...)
+--     return DisplaySystem.Build.Close(...)
+-- end
+-- interface.Build.UpdateStatusCard = function(...)
+--     return DisplaySystem.Build.UpdateStatusCard(...)
+-- end
+
+-- ---->> Staff
+-- interface.Staff = {}
+-- interface.Staff.Open = function(...)
+--     return DisplaySystem.Staff.Open(...)
+-- end
+-- interface.Staff.Close = function(...)
+--     return DisplaySystem.Staff.Close(...)
+-- end
+
+-- ---->> Shop
+-- interface.Shop = {}
+-- interface.Shop.Open = function(...)
+--     return DisplaySystem.Shop.Open(...)
+-- end
+-- interface.Shop.Close = function(...)
+--     return DisplaySystem.Shop.Close(...)
+-- end
+-- ---->> LevelUp
+-- interface.LevelUp = {}
+-- interface.LevelUp.Open = function(...)
+--     return DisplaySystem.LevelUp.Open(...)
+-- end
+-- interface.LevelUp.Close = function(...)
+--     return DisplaySystem.LevelUp.Close(...)
+-- end
+-- ---->> LevelQuest
+-- interface.LevelQuest = {}
+-- interface.LevelQuest.Open = function(...)
+--     return DisplaySystem.LevelQuest.Open(...)
+-- end
+-- interface.LevelQuest.Close = function(...)
+--     return DisplaySystem.LevelQuest.Close(...)
+-- end
+-- ---->> Map
+-- interface.Map = {}
+-- interface.Map.Open = function(...)
+--     return DisplaySystem.Map.Open(...)
+-- end
+-- interface.Map.Close = function(...)
+--     return DisplaySystem.Map.Close(...)
+-- end
+
+
+-- return interface

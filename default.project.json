@@ -1,0 +1,61 @@
+{
+  "name": "Yumi-Framework",
+  "tree": {
+    "$className": "DataModel",
+    "Workspace": {
+      "$className": "Workspace",
+      "$ignoreUnknownInstances": true,
+      "Slots": {
+        "$className": "Folder",
+        "$ignoreUnknownInstances": true 
+      },
+      "Visuals": {
+        "$className": "Folder",
+        "$ignoreUnknownInstances": true 
+      },
+      "Serve": {
+        "$className": "Folder",
+        "$ignoreUnknownInstances": true 
+      }
+    },
+    
+    "ReplicatedStorage": {
+      "Shared": {
+        "$path": "src/Shared",
+        "Assets": {
+          "$className": "Folder",
+          "$ignoreUnknownInstances": true
+        }
+      },
+      "Controllers": {
+        "$className": "Folder",
+        "$path": "src/Client/Controllers"
+      },
+      "Packages": {
+        "$path": "Packages"
+      },
+      "Runtime": {
+        "$className": "Folder",
+        "$ignoreUnknownInstances": true 
+      }
+    },
+    "ServerScriptService": {
+      "$path": "src/Server",
+      "Packages": {
+        "$path": "ServerPackages"
+      }
+    },
+    "ReplicatedFirst": {
+      "$path": "src/Client/Preload",
+      "$ignoreUnknownInstances": true
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "$path": "src/Client/Player"
+      },
+      "StarterCharacterScripts": {
+        "$path": "src/Client/Character"
+      }
+    }
+  }
+}

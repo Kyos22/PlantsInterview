@@ -1,0 +1,38 @@
+{
+	"super": {
+		"prefix": ["super", "class"],
+		"isFileTemplate": true,
+		"body": "--!strict\r\nlocal module = {}\r\nmodule.constructors = {}\r\nmodule.methods = {}\r\nmodule.metatable = { __index = module.methods }\r\n--// Services\r\n\r\n----> Constructor\r\nexport type Config = {\r\n    Part1: BasePart,\r\n}\r\nlocal function prototype(self, config: Config)\r\n    ---->> Public\r\n    self.Part1 = config.Part1\r\n\r\n    ---->> Private\r\n    type field = {\r\n        tasks: { {Name: string, Thread: thread} },\r\n        connections: { {Name: string, Connection: RBXScriptConnection} },\r\n    }\r\n    local _private = {\r\n        tasks = {},\r\n        connections = {},\r\n    } :: field\r\n    self._private = _private\r\n\r\n    return self\r\nend\r\n\r\n---->> Public Properties\r\nmodule.constructors.metatable = module.metatable\r\nmodule.constructors.methods = module.methods\r\nmodule.constructors.private = {}\r\nfunction module.constructors.new(config: Config)\r\n    local self = setmetatable(prototype({} :: any, config), module.metatable)\r\n\r\n    return self :: Type\r\nend\r\n\r\n---->> Private Functions\r\n\r\n---->> APIs\r\nfunction module.methods.Initialize(self: Type) end\r\n\r\nfunction module.methods.Destroy(self: Type)\r\n    local _p = self._private\r\n    for _, data in ipairs(_p.tasks) do\r\n        local task_ = data.Thread\r\n        if coroutine.status(task_) == \"suspended\" then\r\n            task.cancel(task_)\r\n        else\r\n            task.defer(function()\r\n                task.cancel(task_)\r\n            end)\r\n        end\r\n    end\r\n    for _, data in ipairs(_p.connections) do\r\n        local conn = data.Connection\r\n        conn:Disconnect()\r\n    end\r\n\r\n    do --other destroy logic\r\n    end\r\n\r\n    table.clear(self :: any)\r\nend\r\nfunction module.methods.DoABC(self: Type)\r\n    print(\"Super DoABC\")\r\nend\r\n\r\nexport type Type = typeof(prototype(...)) & typeof(module.methods)\r\n\r\nreturn module.constructors\r\n",
+		"description": ""
+	},
+	"sub": {
+		"prefix": "sub",
+		"isFileTemplate": true,
+		"body": "--!strict\r\nlocal super = require(script.Parent.ClickItem)\r\nlocal module = {}\r\nmodule.constructors = {}\r\nmodule.methods = {}\r\nmodule.metatable = { __index = module.methods }\r\nsetmetatable(module.methods, super.metatable)\r\n--// Services\r\n\r\n---->> Constructor\r\nexport type Config = super.Config & {\r\n    Part2: BasePart,\r\n}\r\nlocal function prototype(self, config: Config)\r\n    self.Part2 = config.Part2\r\n    return self\r\nend\r\n---->> Public Properties\r\nmodule.constructors.metatable = module.metatable\r\nmodule.constructors.methods = module.methods\r\nmodule.constructors.private = {}\r\nfunction module.constructors.new(config: Config)\r\n    local self = setmetatable(super.new(config) :: any, module.metatable)\r\n    self = prototype(self, config)\r\n    return self :: Type\r\nend\r\n---->> Private Functions\r\n\r\n---->> APIs\r\nfunction module.methods.DoABC(self: Type)\r\n    super.methods.DoABC(self)\r\n    print(\"Overwrite DoABC\")\r\nend\r\n\r\nexport type Type = typeof(prototype(...)) & typeof(module.methods) & super.Type\r\n\r\nreturn module.constructors\r\n",
+		"description": ""
+	},
+	"system": {
+		"prefix": "system",
+		"isFileTemplate": true,
+		"body": "--!strict\r\n--// Service\r\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\r\n--// Modules\r\nlocal Yumi = require(ReplicatedStorage.Shared.Core.Yumi)\r\n\r\n--\r\nexport type APIsType = {}\r\n\r\nlocal module = {} :: APIsType & Yumi.System\r\n\r\n--// Yumi\r\n\r\n--// APIs\r\n\r\nreturn module\r\n",
+		"description": ""
+	},
+	"interface": {
+		"prefix": "interface",
+		"isFileTemplate": true,
+		"body": "--!strict\r\n--// Services\r\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\r\n\r\n--// Modules\r\nlocal System = require(ReplicatedStorage.Controllers.Systems.Gear)\r\n\r\n--// Interface\r\nlocal interface: System.APIsType = {} :: any\r\n\r\ninterface.ABC = function(...)\r\n    return System.ABC(...)\r\nend\r\n\r\nreturn interface\r\n",
+		"description": ""
+	},
+	"observer": {
+		"prefix": "observer",
+		"isFileTemplate": true,
+		"body": "--!strict\r\n--// Services\r\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\r\n--// Modules\r\nlocal Yumi = require(ReplicatedStorage.Shared.Core.Yumi)\r\nlocal SignalModule = require(ReplicatedStorage.Packages.Signal)\r\n--// Type\r\ntype Signal = typeof(SignalModule.new())\r\n--// Constants\r\nlocal Event = {\r\n    PlayerTouched = \"PlayerTouched\",\r\n}\r\n--// Type\r\nexport type PlayerTouchedEventArgs = {\r\n    OtherPart: BasePart,\r\n}\r\n--// Variable\r\nlocal eventCache: {\r\n    [string]: Signal,\r\n} = {}\r\n\r\n--\r\nexport type Type = {\r\n    Event: typeof(Event),\r\n} & Yumi.Observer\r\nlocal module: Type = {} :: any\r\n\r\ndo --init\r\n    table.freeze(Event)\r\n    for _, event in pairs(Event) do\r\n        eventCache[event] = SignalModule.new()\r\n    end\r\nend\r\n\r\n--// Yumi\r\nmodule._Setup = function() end\r\n\r\n--// APIs\r\nmodule.Subscribe = function(event: string, callback: any)\r\n    if not eventCache[event] or not callback then\r\n        return nil\r\n    end\r\n    if typeof(callback) ~= \"function\" then\r\n        return nil\r\n    end\r\n    local conn = eventCache[event]:Connect(callback)\r\n    return conn\r\nend\r\nmodule.Fire = function(event: string, args: any, isDefered: boolean?)\r\n    if not eventCache[event] then\r\n        return nil\r\n    end\r\n    if isDefered then\r\n        eventCache[event]:FireDeferred(args)\r\n    else\r\n        eventCache[event]:Fire(args)\r\n    end\r\nend\r\nreturn module\r\n",
+		"description": ""
+	},
+	"library": {
+		"prefix": "library",
+		"isFileTemplate": true,
+		"body": "--!strict\r\nlocal module = {}\r\n--// Constants & Enums\r\n\r\n--// APIs\r\nfunction module.GetAllABC() end\r\n\r\n--deep freeze everything\r\nlocal function deepFreeze(tbl)\r\n\ttable.freeze(tbl)\r\n\tfor _, v in pairs(tbl) do\r\n\t\tif type(v) == \"table\" and not table.isfrozen(v) then\r\n\t\t\tdeepFreeze(v)\r\n\t\tend\r\n\tend\r\nend\r\ndeepFreeze(module)\r\n\r\nreturn module\r\n",
+		"description": ""
+	}
+}

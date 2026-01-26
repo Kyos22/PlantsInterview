@@ -1,0 +1,14 @@
+# Project
+/*.rbxlx.lock
+/*.rbxl.lock
+/.vscode/settings.json
+
+# Framework
+/sourcemap.json
+src/Shared/Network/Client.luau
+src/Shared/Network/Server.luau
+/Packages
+/ServerPackages
+
+# Custom
+/TemplatePackage

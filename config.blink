@@ -1,0 +1,40 @@
+option TypesOutput = "src/Shared/Network/Types.luau"
+option ClientOutput = "src/Shared/Network/Client.luau"
+option ServerOutput = "src/Shared/Network/Server.luau"
+option PromiseLibrary = "ReplicatedStorage.Packages.Promise"
+option FutureLibrary = "ReplicatedStorage.Packages.Future"
+option Casing = Pascal
+option Typescript = true
+
+type data = unknown
+type player = unknown
+type version = i32
+type increaseLvl = u8 -- Một lần nâng bao nhiêu level (1, 10, 100)
+type upgradeType = u8 -- Nâng cấp cái gì? Định nghĩa trong file Shared/General/UpgradeType.luau
+
+
+type quantity = u8
+type addEggFrom = u8 -- 0: Hand, 1: Conveyor
+
+
+type index = u8
+type name = string
+
+-- INTEGRATION TESTING
+
+
+----PlayerProfile
+
+
+
+event ProfileUpdated {
+    From: Server,
+    Type: Reliable,
+    Call: ManyAsync,
+    Data: (data, version?),
+}
+
+function GetProfile {
+    Yield: Coroutine,
+    Return: (data, version?),
+}
