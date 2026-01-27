@@ -9,8 +9,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 ---->> Classes
 local BasePanel = require(script.Panels.BasePanel)
 
+-->> Panels
+local Hotbar = require(script.Panels.Hotbar)
 
-local Panels = {	
+local Panels = {
+	Hotbar = Hotbar
 }
 
 --// Constants & Enums
@@ -24,6 +27,12 @@ local PanelData: {
 --// Types
 export type APIsType = {
 	Switch: (source: any?, target: string) -> (),
+
+	Hotbar : {
+		Instance: Hotbar.Type,
+		Open: () -> (),
+		Close: () -> (),
+	}
 }
 
 export type Type = {
@@ -59,11 +68,22 @@ function Display:_Setup()
 end
 
 function Display:_Start()
-
-
-
+	while not Display.Hotbar.Instance do
+		task.wait()
+	end
+	Display.Hotbar.Open()
 end
 
-
+---->> Hotbar
+Display.Hotbar = {} :: any
+Display.Hotbar.Instance = function()
+	return Display.Hotbar.Instance
+end
+Display.Hotbar.Open = function()
+	Display.Hotbar.Instance:Open()
+end
+Display.Hotbar.Close = function()
+	Display.Hotbar.Instance:Close()
+end
 
 return Display
