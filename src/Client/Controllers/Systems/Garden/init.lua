@@ -15,17 +15,16 @@ local module = {} :: APIsType & Yumi.System
 --// Yumi
 
 --// APIs
-local function Get(slotIndex): Garden.Type | nil
+local function Get(slotIndex : number): Garden.Type | nil
     local slot = OUTSIDE:WaitForChild(tostring(slotIndex))
-    local garden = slot:FindFirstChildOfClass("Model")
+    local garden = slot:FindFirstChildOfClass("Model") :: Model
     print("garden")
     if not garden then
         return
 
     end
 
-    local soil1 = garden:WaitForChild("GardenBox1"):WaitForChild("Land")
-    local soil2 = garden:WaitForChild("GardenBox2"):WaitForChild("Land")    
+    local soil1 = garden:WaitForChild("GardenBox"):WaitForChild("Land")
 
     return {
         Player = Players.LocalPlayer,
@@ -33,16 +32,13 @@ local function Get(slotIndex): Garden.Type | nil
         GardenModel = garden,
         Land = {
             Soil1 = soil1,
-            Soil2 = soil2,
-        },
+        }
     }
 end
 
 module._Start = function()
     Client.Garden.Init.On(function(indexSlot:number)
-        print("slot",indexSlot)
         local garden = Get(indexSlot)
-        print("garden",garden)
         local gardenBusiness = Garden.new(garden)
     end)
 end

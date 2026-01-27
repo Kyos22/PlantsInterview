@@ -17,6 +17,13 @@ export type Profile = {
 	Balance: {
 		Money: number,
 	},
+	Inventory: {
+		Plants : {
+			[string]: {
+				Quantity: number,
+			},
+		}
+	}
 	
 	
 }
@@ -56,7 +63,16 @@ local Template: Profile = {
 	Balance = {
 		Money = 1000,
 	},
-	
+	Inventory = {
+		Plants = {
+			["Corn"] = {
+				Quantity = 100,
+			},
+			["Tomato"] = {
+				Quantity = 100,
+			}
+		}
+	},
 }
 
 local module = {}

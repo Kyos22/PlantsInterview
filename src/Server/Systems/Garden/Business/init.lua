@@ -17,7 +17,7 @@ export type Config = {
     GardenModel: Model,
     Land: {
         Soil1: Part,
-        Soil2: Part,
+        -- Soil2: Part,
     },
 
 }

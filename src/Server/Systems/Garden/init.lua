@@ -146,8 +146,8 @@ function module.Assign(player: Player)
 		Slot = slot,
         GardenModel = modelOutside,
         Land = {
-            Soil1 = modelOutside:WaitForChild("GardenBox1"):WaitForChild("Land") :: Part,
-            Soil2 = modelOutside:WaitForChild("GardenBox2"):WaitForChild("Land") :: Part,
+            Soil1 = modelOutside:WaitForChild("GardenBox"):WaitForChild("Land") :: Part,
+            -- Soil2 = modelOutside:WaitForChild("GardenBox2"):WaitForChild("Land") :: Part,
         },
 	})
 
