@@ -19,10 +19,14 @@ export declare const Preload: {
 }
 export declare namespace Garden {
 	type slot = number
+	type plant = string
 	export const Init: {
 		Fire: (Player: Player, Value: number) => void
 		FireAll: (Value: number) => void
 		FireExcept: (Except: Player, Value: number) => void
 		FireList: (List: Player[], Value: number) => void
+	}
+	export const Sow: {
+		On: (Listener: (Player: Player, Value: string) => void) => (() => void)
 	}
 }

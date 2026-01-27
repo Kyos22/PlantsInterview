@@ -30,6 +30,7 @@ export type APIsType = {
 
 	Hotbar : {
 		Instance: Hotbar.Type,
+		GetInstance: () -> Hotbar.Type,
 		Open: () -> (),
 		Close: () -> (),
 	}
@@ -52,6 +53,7 @@ function Display:_Setup()
 			local success, response = pcall(function()
 				-- print(`[Display] Start Initializing > {name}`)
 				local instance = display.new(self)
+				print("insta",instance)
 				instance:Initialize()
 				Display[name].Instance = instance
 
@@ -79,6 +81,11 @@ Display.Hotbar = {} :: any
 Display.Hotbar.Instance = function()
 	return Display.Hotbar.Instance
 end
+
+Display.Hotbar.GetInstance = function()
+	return Display.Hotbar.Instance
+end
+
 Display.Hotbar.Open = function()
 	Display.Hotbar.Instance:Open()
 end

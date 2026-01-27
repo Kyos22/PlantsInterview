@@ -10,6 +10,10 @@ local interface = {} :: DisplaySystem.APIsType
 
 -->> Hotbar
 interface.Hotbar = {}
+
+interface.Hotbar.GetInstance = function(...)
+	return DisplaySystem.Hotbar.GetInstance(...)
+end
 interface.Hotbar.Open = function(...)
     return DisplaySystem.Hotbar.Open(...)
 end
@@ -162,4 +166,4 @@ end
 -- end
 
 
--- return interface
+return interface

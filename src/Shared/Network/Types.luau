@@ -150,6 +150,7 @@ export type data = any
 export type player = any
 export type version = number
 export type Garden_slot = number
+export type Garden_plant = string
 
 
 

@@ -57,24 +57,14 @@ module._Setup = function()
 			return false
 		end
 
-		-- local interior: Model = restaurant.Interior
-
-		-- if interior then
-		-- 	player:AddReplicationFocus(
-		-- 		interior.PrimaryPart or interior:FindFirstChildWhichIsA("BasePart", true) :: BasePart
-		-- 	)
-		-- 	interior:AddTag("RESTAURANT_INSIDE")
-		-- end
-
-		-- player:SetAttribute(CONSTANT.PLAYER.ATTRIBUTE.RESTAURANT_MODE, "OUTSIDE")
-
-		-- Server.Restaurant.Assigned.Fire(player, restaurant.Slot)
 		return true
 	end)
 end
 
 module._Start = function()
-    
+    Server.Garden.Sow.On(function(player:Player,plant)
+		print("dd",plant)
+    end)
 end
 
 function module.Assign(player: Player)

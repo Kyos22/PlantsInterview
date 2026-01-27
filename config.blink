@@ -37,11 +37,19 @@ function Preload {
 --  Garden
 scope Garden {
     type slot = u16
+    type plant = string
 
     event Init {
         From: Server,
         Type: Reliable,
         Call: ManyAsync,
         Data: slot,
+    }
+
+    event Sow {
+        From: Client,
+        Type: Reliable,
+        Call: ManyAsync,
+        Data: plant,
     }
 }

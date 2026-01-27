@@ -6,51 +6,36 @@ module.methods = {}
 module.metatable = { __index = module.methods }
 setmetatable(module.methods, super.metatable)
 
---// Services
+-->> Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-local MarketplaceService = game:GetService("MarketplaceService")
-local GuiService = game:GetService("GuiService")
 
---// Modules
--- local SharedInterfaces = ReplicatedStorage.SharedControllers.Interfaces
-local Interfaces = ReplicatedStorage.Controllers.Interfaces
+
+-->> Modules
 local Shared = ReplicatedStorage.Shared
 local Core = Shared.Core
 local Packages = ReplicatedStorage.Packages
--- local Libraries = Shared.Lobby.Libraries
----->> Network
--- local Client = require(Shared.Network.Client)Flocal DefaultSource = ReplicatedStorage.Assets.Display
+local PLANTS = require(ReplicatedStorage.Shared.Libraries.Plants)
 
 ---->> Utils
 local Utils = require(Core.Utils)
 local DisplayHelper = require(Core.Utils.DisplayHelper)
 local Ripple = require(Core.Utils.Ripple)
 
----->> Libraries
--- local TesterLibrary = require(Libraries.Tester)
--- local ProgressionLibrary = require(Shared.Global.Libraries.Progression)
----->> Observers
--- local ProfileObserver = require(ReplicatedStorage.SharedControllers.Observers.Profile)
----->> Interfaces
-local ProfileInterface = require(ReplicatedStorage.Controllers.Interfaces.Profile)
--- local SoundInterface = require(ReplicatedStorage.SharedControllers.Interfaces.Sound)
--- local AudioLib = require(ReplicatedStorage.Shared.Lobby.Libraries.Audio)
-
---// Constants & Enums
-local QUEUE_TIMER_BIND = "QUEUE_TIMER_BIND"
-
---// References
+-->> Refs
+local TEMPLATE_HOTBAR = ReplicatedStorage.Assets.Display.Template.Hotbar
 local Assets = ReplicatedStorage.Assets
 local UI = Assets.Display.Hotbar
--- local TemplateFolder = Assets.Display.Templates.Menu
--- local Template = {
--- 	TeleportButton = TemplateFolder.TeleportButton,
--- }
 
---// Types
+---->> Observers
+-- local ProfileObserver = require(ReplicatedStorage.SharedControllers.Observers.Profile)
+
+---->> Interfaces
+local ProfileInterface = require(ReplicatedStorage.Controllers.Interfaces.Profile)
+
+--// Constants & Enums
+
+
+-->> Types
 type Profile = ProfileInterface.Profile
 export type PrivateField = super.PrivateField & {
 	profileInitialized: boolean,
@@ -62,18 +47,30 @@ export type PrivateField = super.PrivateField & {
 local function prototype(self: Type, system: any)
 	---->> Public Properties
 	self.UI = DisplayHelper:CloneSingleton(UI) :: typeof(UI)
-
+	self.Holder = self.UI.Frame.Holder
 	---->> Private Properties
-	-- self._private.queueTimestamp = 0
-    -- self.Data = nil
+	
 	return self
 end
 
 function module.methods.Initialize(self: Type)
 	super.methods.Initialize(self)
 
-	-- self.Data = ProfileInterface.GetAsync()
-    -- print("selfda",self.Data)
+    local _p = self._private
+	-- task.wait(2)
+    task.spawn(function() -- In-case UI is ahead of Profile
+		local profile = ProfileInterface.GetAsync()
+
+		if _p.profileInitialized then
+			return
+		end
+		_p.profileInitialized = true
+
+        print("profi",profile)
+		self:RenderCard(profile.Inventory.Plants)
+		-- self:UpdateAsProfile(profile)
+	end)
+	self:Setup()
 end
 
 --// Private Functions
@@ -83,10 +80,43 @@ local WrapDebounce = super.private.WrapDebounce
 local WrapHover = super.private.WrapHover
 
 --// Public Functions
-function module.methods.RenderCard(self: Type)
-    
+function module.methods.RenderCard(self: Type,plants)
+	for key, data in pairs(plants) do
+		local plantData = PLANTS.Data[key]
+		if not plantData then continue end
+		local template = TEMPLATE_HOTBAR.Template:Clone()
+		template.Name = key
+
+		local sprite = template.Sprite :: ImageLabel
+		local name = template.NamePlant :: TextLabel
+		local quantity = template.Quantity :: TextLabel
+		local button = template.Hitbox :: TextButton
+
+		sprite.Image = plantData.ImageId
+		name.Text = key
+		quantity.Text = tostring(data.Quantity)
+		template.Parent = self.Holder
+
+		WrapLemon(self, button.Activated, WrapDebounce(self, function()
+			print("plant",key)
+			self.SelectPlant.Value = key
+		end))
+	end
 end
 
+function module.methods.Setup(self: Type)
+	local SelectPlant = Instance.new("StringValue")
+	SelectPlant.Name = "SelectPlant"
+	SelectPlant.Value = "Corn"
+	SelectPlant.Parent = self.UI
+	self.SelectPlant = SelectPlant
+
+
+end
+
+function module.methods.Add(self: Type, plant: string, quantity: number)
+	
+end
 
 function module.methods.Open(self: Type, isAnimated: boolean?)
 	super.methods.Open(self)

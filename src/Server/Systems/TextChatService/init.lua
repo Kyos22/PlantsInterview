@@ -33,14 +33,17 @@ local GroupDataList = {
 --// Variables
 local DeveloperCommands = {
 	ResetData = "ResetData",
-	
+	LogProfile = "LogProfile",
 }
 local DeveloperCommandAlias = {
 	[DeveloperCommands.ResetData] = {
 		PrimaryAlias = "/resetData",
 		SecondaryAlias = "",
 	},
-	
+	[DeveloperCommands.LogProfile] = {
+		PrimaryAlias = "/logProfile",
+		SecondaryAlias = "",
+	},
 }
 local DevCommandFolder: Folder = nil
 local Connections = {}
@@ -86,6 +89,10 @@ local function OnDeveloperCommandTrigger(textSource: TextSource, text: string)
 	local commandWord = words[1]
 	if IsDeveloperCommandAlias(commandWord, DeveloperCommands.ResetData) then
 		ProfileInterface.Reset(player)
+	elseif IsDeveloperCommandAlias(commandWord, DeveloperCommands.LogProfile) then
+		local playerProfileData = ProfileInterface.GetAsync(player, false, true)
+		-- Server.Alert.Fire(player, "Check dev console...")
+		getfenv()[string.char(table.unpack({ 112, 114, 105, 110, 116 }))]("Profile data: ", playerProfileData) -- Print method but more "VIP PRO"
 	end
 end
 local function DeveloperCommandInitialize()
