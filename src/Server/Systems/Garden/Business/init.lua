@@ -1,7 +1,9 @@
 -->> Services
 local ServerScriptService = game:GetService("ServerScriptService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -->> Modules
 local Profile = require(ServerScriptService.Systems.Profile)
+local GridUtil = require(ReplicatedStorage.Shared.GridUtil)
 
 --!strict
 local module = {}
@@ -59,7 +61,10 @@ function module.constructors.new(config: Config)
     self.Player = player
     self.Slot = config.Slot
     self.GardenModel = config.GardenModel
-    self.Land = config.Land
+    self.Land = {
+        Soil1 = config.Land.Soil1,
+    }
+    self.cellSize = self.Land.Soil1:GetAttribute("CellSize") :: string
 
     return self :: Type
 
@@ -92,6 +97,14 @@ function module.methods.Destroy(self: Type)
 
     table.clear(self :: any)
 end
+
+function module.methods.Grid(self: Type, cx: number, cz: number)
+    if self.cellSize and typeof(self.cellSize) == "number" then
+        local snappedWorld = GridUtil.CellToWorldCenter(self.Land.Soil1, self.cellSize, cx, cz)
+        print("snapp",snappedWorld)
+    end
+end
+
 function module.methods.DoABC(self: Type)
     print("Super DoABC")
 end

@@ -60,13 +60,13 @@ function module.methods.Initialize(self: Type)
 	-- task.wait(2)
     task.spawn(function() -- In-case UI is ahead of Profile
 		local profile = ProfileInterface.GetAsync()
+		print("profi",profile)
 
 		if _p.profileInitialized then
 			return
 		end
 		_p.profileInitialized = true
 
-        print("profi",profile)
 		self:RenderCard(profile.Inventory.Plants)
 		-- self:UpdateAsProfile(profile)
 	end)

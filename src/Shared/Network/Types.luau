@@ -149,12 +149,16 @@ local Queue: any = {
 export type data = any
 export type player = any
 export type version = number
+export type Profile_isAsync = boolean
 export type Garden_slot = number
 export type Garden_plant = string
+export type Garden_pos = { cx: number?, cz: number? }
 
 
 
 return {
+	Profile = {
+	},
 	Garden = {
 	},
 

@@ -9,22 +9,20 @@ local Profile = require(ServerScriptService.Systems.Profile)
 local CONSTANT = require(ReplicatedStorage.Shared.CONSTANT)
 local Server = require(ReplicatedStorage.Shared.Network.Server)
 local Business = require(ServerScriptService.Systems.Garden.Business)
+
 -->> Inputs
 local OUTSIDE = workspace:WaitForChild("OUTSIDE") :: Folder
 local RNG = Random.new()
 local Assets = ReplicatedStorage.Shared.Assets
 local Garden = Assets.Models.Garden.Garden :: Model
-
 export type APIsType = {
     Assign: (player: Player) -> (Business.Type)?,
-
     Garden: { [Player]: Business.Type },
 
 }
 
 local module = {} :: APIsType & Yumi.System
 
---// Yumi
 
 --// APIs
 module._Setup = function()
@@ -62,8 +60,12 @@ module._Setup = function()
 end
 
 module._Start = function()
-    Server.Garden.Sow.On(function(player:Player,plant)
-		print("dd",plant)
+    Server.Garden.Sow.On(function(player:Player,plant, pos)
+        print("dd",plant,pos)
+		if module.Garden[player] then
+			local garden = module.Garden[player]
+			garden:Grid(pos.cx,pos.cz)
+		end
     end)
 end
 

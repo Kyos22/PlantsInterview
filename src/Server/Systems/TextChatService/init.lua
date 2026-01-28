@@ -1,32 +1,31 @@
 --!strict
---// Service
+
+-->> Service
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local RunService = game:GetService("RunService")
-local TeleportService = game:GetService("TeleportService")
---// Modules
-local Interfaces = ServerScriptService.Interfaces
+
+-->> Modules
 local DataModifiers = ServerScriptService.Systems.Profile.DataModifier
 local Template = require("./Profile/Template")
 local Yumi = require(ReplicatedStorage.Shared.Core.Yumi)
 local Server = require(ReplicatedStorage.Shared.Network.Server)
----->> Interfaces
-local ProfileInterface = require(Interfaces.Profile)
 
----->> Data Modifier
--- local BalanceData = require(DataModifiers.Balance)
+---->> Interfaces
+local Interfaces = ServerScriptService.Interfaces
+local ProfileInterface = require(Interfaces.Profile)
 
 ---->> Libraries
 --// Constants & Enums
 local GroupDataList = {
 	{
-		GroupId = 34793917, --leco
+		GroupId = 34793917,
 		DevRank = 253,
 	},
 	{
-		GroupId = 35895059, --leco lab
+		GroupId = 35895059,
 		DevRank = 250,
 	},
 }

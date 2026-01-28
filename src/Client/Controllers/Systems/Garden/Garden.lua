@@ -148,9 +148,9 @@ function module.methods.Click(self: Type,screenPos: Vector2?)
 
 	local hitPos = result.Position
 	if self.cellSize and typeof(self.cellSize) == "number" then
-
-		local cx, cz = GridUtil.WorldToCell(self.Land.Soil1, self.cellSize, hitPos)
-
+        print("hitpos",hitPos)
+		local cx: number, cz = GridUtil.WorldToCell(self.Land.Soil1, self.cellSize, hitPos)
+        print("cx,cz",cx,cz)
 		if not GridUtil.IsCellInside(self.Land.Soil1, self.cellSize, cx, cz) then
 			print(("Clicked OUTSIDE grid: cell=(%d,%d)"):format(cx, cz))
 			return
@@ -167,7 +167,11 @@ function module.methods.Click(self: Type,screenPos: Vector2?)
         -- GardenObserver.Fire(GardenObserver.Event.Sow, {
         --     Name = selectedPlant,
         -- })
-        Client.Garden.Sow.Fire(selectedPlant)
+        Client.Garden.Sow.Fire(selectedPlant,{
+            cx = cx,
+            cz = cz,
+        })
+
 		DrawMarker(snappedWorld)
 	end
 end

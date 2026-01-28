@@ -196,7 +196,7 @@ function Data.Update(player: Player)
 		local success, message = pcall(function()
 			local profile = Profiles[player]
 			if profile then
-				Server.ProfileUpdated.Fire(player, profile.Data)
+				Server.ProfileUpdated.Fire(player, profile.Data, Template.VERSION)
 			end
 		end)
 
