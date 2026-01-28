@@ -72,6 +72,10 @@ local Features: YumiFeatures = {
 				Enabled = true,
 				Priority = 10,
 			},
+			["Plants"] = {
+				Enabled = true,
+				Priority = 10,
+			},
 		},
 	},
 	Observers = {

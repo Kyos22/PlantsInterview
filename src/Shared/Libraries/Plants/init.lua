@@ -2,18 +2,21 @@ local Plants = {}
 
 local Data = {
     ["Wheat"] = {
+        Name = "Wheat",
         GrowthDuration = 5,
         Exp = 1,
         Coins = 10,
         ImageId = ""
     },
     ["Corn"] = {
+        Name = "Corn",
         GrowthDuration = 5,
         Exp = 1,
         Coins = 10,
         ImageId = "rbxassetid://111573557056660"
     },
     ["Tomato"] = {
+        Name = "Tomato",
         GrowthDuration = 10,
         Exp = 1,
         Coins = 15,

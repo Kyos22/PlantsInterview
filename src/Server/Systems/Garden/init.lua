@@ -9,6 +9,7 @@ local Profile = require(ServerScriptService.Systems.Profile)
 local CONSTANT = require(ReplicatedStorage.Shared.CONSTANT)
 local Server = require(ReplicatedStorage.Shared.Network.Server)
 local Business = require(ServerScriptService.Systems.Garden.Business)
+local Plants = require(ServerScriptService.Systems.Plants)
 
 -->> Inputs
 local OUTSIDE = workspace:WaitForChild("OUTSIDE") :: Folder
@@ -64,7 +65,7 @@ module._Start = function()
         print("dd",plant,pos)
 		if module.Garden[player] then
 			local garden = module.Garden[player]
-			garden:Grid(pos.cx,pos.cz)
+			garden:Grid(pos.cx,pos.cz,plant)
 		end
     end)
 end
@@ -142,6 +143,7 @@ function module.Assign(player: Player)
             -- Soil2 = modelOutside:WaitForChild("GardenBox2"):WaitForChild("Land") :: Part,
         },
 	})
+	garden:Initialize()
 
 	if not garden then
 		return nil

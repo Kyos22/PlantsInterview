@@ -34,7 +34,6 @@ local ProfileInterface = require(ReplicatedStorage.Controllers.Interfaces.Profil
 
 --// Constants & Enums
 
-
 -->> Types
 type Profile = ProfileInterface.Profile
 export type PrivateField = super.PrivateField & {
@@ -61,7 +60,6 @@ function module.methods.Initialize(self: Type)
     task.spawn(function() -- In-case UI is ahead of Profile
 		local profile = ProfileInterface.GetAsync()
 		print("profi",profile)
-
 		if _p.profileInitialized then
 			return
 		end
@@ -96,6 +94,8 @@ function module.methods.RenderCard(self: Type,plants)
 		name.Text = key
 		quantity.Text = tostring(data.Quantity)
 		template.Parent = self.Holder
+
+		WrapHover(self,template)
 
 		WrapLemon(self, button.Activated, WrapDebounce(self, function()
 			print("plant",key)

@@ -6,6 +6,7 @@ module.metatable = { __index = module.methods }
 
 --// Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 
 --// Modules
 local Shared = ReplicatedStorage.Shared
@@ -71,6 +72,58 @@ local function WrapLemon(self: Type, signal, handler)
 	lemon:Disconnect()
 end
 
+
+local function WrapHover(self: Type, button: GuiButton | Frame)
+	local hover = button:FindFirstChild("Hitbox") :: GuiObject
+    if not hover then
+        warn(`Cannot perform WrapHover onto {button:GetFullName()} if missing Hover object`)
+        return
+    end
+
+    if button:IsA("GuiButton") then
+        local hitbox = button
+
+        WrapLemon(self, hitbox.MouseEnter, function()
+            TweenService:Create(
+                hover,
+                TweenInfo.new(0.1),
+                {ImageTransparency = 0.8}
+            ):Play()
+            -- SoundInterface.PlaySound(AudioLib.Sound.ButtonHover)
+        end)
+    
+        WrapLemon(self, hitbox.MouseLeave, function()
+            TweenService:Create(
+                hover,
+                TweenInfo.new(0.1),
+                {ImageTransparency = 1}
+            ):Play()
+        end)
+    else
+        local hitbox = button:FindFirstChild("Hitbox") :: GuiButton
+        if not hitbox then
+            warn(`Cannot perform WrapHover onto {button:GetFullName()} if missing Hitbox object`)
+            return
+        end
+
+        WrapLemon(self, hitbox.MouseEnter, function()
+            TweenService:Create(
+                hover,
+                TweenInfo.new(0.1),
+                {BackgroundTransparency = 0.8}
+            ):Play()
+        end)
+    
+        WrapLemon(self, hitbox.MouseLeave, function()
+            TweenService:Create(
+                hover,
+                TweenInfo.new(0.1),
+                {BackgroundTransparency = 1}
+            ):Play()
+        end)
+    end
+end
+
 local function ResolveLemons(self: Type, isReconnect: boolean)
 	local _p = self._private
 
@@ -103,6 +156,7 @@ module.constructors.private = {
 	WrapDebounce = WrapDebounce,
 	WrapLemon = WrapLemon,
 	ResolveLemons = ResolveLemons,
+	WrapHover = WrapHover,
 }
 
 function module.constructors.new(system: any): Type

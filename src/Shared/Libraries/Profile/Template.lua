@@ -21,6 +21,14 @@ export type Profile = {
 				Quantity: number,
 			},
 		}
+	},
+	Garden : {
+		Slot: {
+			[string]: {
+				Name: string,
+				Startime : number,
+			}
+		}
 	}
 }
 
@@ -73,6 +81,10 @@ local Template: Profile = {
 			}
 		}
 	},
+	Garden = {
+		Slot = {}
+	},
+	
 }
 
 local module = {}
