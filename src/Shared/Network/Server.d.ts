@@ -5,6 +5,12 @@ export declare const StepReplication: () => void
 type data = unknown
 type player = unknown
 type version = number
+export declare namespace Profile {
+	type isAsync = boolean
+	export const Get: {
+		On: (Listener: (Player: Player, Value: boolean) => LuaTuple<[unknown, number | undefined]>) => void
+	}
+}
 export declare const ProfileUpdated: {
 	Fire: (Player: Player, Value1: unknown, Value2: number | undefined) => void
 	FireAll: (Value1: unknown, Value2: number | undefined) => void
@@ -19,10 +25,15 @@ export declare const Preload: {
 }
 export declare namespace Garden {
 	type slot = number
+	type plant = string
+	type pos = { cx?: number | undefined, cz?: number | undefined }
 	export const Init: {
 		Fire: (Player: Player, Value: number) => void
 		FireAll: (Value: number) => void
 		FireExcept: (Except: Player, Value: number) => void
 		FireList: (List: Player[], Value: number) => void
+	}
+	export const Sow: {
+		On: (Listener: (Player: Player, Value1: string, Value2: { cx?: number | undefined, cz?: number | undefined }) => void) => (() => void)
 	}
 }

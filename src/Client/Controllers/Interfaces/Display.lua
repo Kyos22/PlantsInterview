@@ -1,12 +1,25 @@
--- --// Services
--- local ReplicatedStorage = game:GetService("ReplicatedStorage")
+--// Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- --// Modules
--- local DisplaySystem = require(ReplicatedStorage.Controllers.Systems.Display)
+--// Modules
+local DisplaySystem = require(ReplicatedStorage.Controllers.Systems.Display)
 
--- --// Interface
--- local interface = {} :: DisplaySystem.APIsType
+--// Interface
+local interface = {} :: DisplaySystem.APIsType
 
+
+-->> Hotbar
+interface.Hotbar = {}
+
+interface.Hotbar.GetInstance = function(...)
+	return DisplaySystem.Hotbar.GetInstance(...)
+end
+interface.Hotbar.Open = function(...)
+    return DisplaySystem.Hotbar.Open(...)
+end
+interface.Hotbar.Close = function(...)
+    return DisplaySystem.Hotbar.Close(...)
+end
 -- ---->> Transition
 -- interface.Transition = {}
 -- interface.Transition.Open = function(...)
@@ -153,4 +166,4 @@
 -- end
 
 
--- return interface
+return interface

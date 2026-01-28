@@ -7,12 +7,20 @@ module.metatable = { __index = module.methods }
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
+
 -->> Modules
 local GridUtil = require(ReplicatedStorage.Shared.GridUtil)
 local Hover = require(script.Parent.Components.Hover)
+
+
 -->> Inputs
 local mouse = Players.LocalPlayer:GetMouse()
 
+-->> Interfaces
+local DisplayInterface = require(ReplicatedStorage.Controllers.Interfaces.Display)
+-->> Observers
+local GardenObserver = require(ReplicatedStorage.Controllers.Observers.Garden)
+local Client = require(ReplicatedStorage.Shared.Network.Client)
 
 ----> Constructor
 export type Config = {
@@ -140,9 +148,9 @@ function module.methods.Click(self: Type,screenPos: Vector2?)
 
 	local hitPos = result.Position
 	if self.cellSize and typeof(self.cellSize) == "number" then
-
-		local cx, cz = GridUtil.WorldToCell(self.Land.Soil1, self.cellSize, hitPos)
-
+        print("hitpos",hitPos)
+		local cx: number, cz = GridUtil.WorldToCell(self.Land.Soil1, self.cellSize, hitPos)
+        print("cx,cz",cx,cz)
 		if not GridUtil.IsCellInside(self.Land.Soil1, self.cellSize, cx, cz) then
 			print(("Clicked OUTSIDE grid: cell=(%d,%d)"):format(cx, cz))
 			return
@@ -154,6 +162,15 @@ function module.methods.Click(self: Type,screenPos: Vector2?)
 			cx, cz,
 			snappedWorld.X, snappedWorld.Y, snappedWorld.Z
 		))
+        local selectedPlant = DisplayInterface.Hotbar.GetInstance().SelectPlant.Value
+        print("selec",selectedPlant)
+        -- GardenObserver.Fire(GardenObserver.Event.Sow, {
+        --     Name = selectedPlant,
+        -- })
+        Client.Garden.Sow.Fire(selectedPlant,{
+            cx = cx,
+            cz = cz,
+        })
 
 		DrawMarker(snappedWorld)
 	end

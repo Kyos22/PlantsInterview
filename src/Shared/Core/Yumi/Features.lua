@@ -39,16 +39,16 @@ local Features: YumiFeatures = {
 			},
 			["Display"] = {
 				Enabled = true,
-				Priority = 20,
+				Priority = 10,
 			},
-			["Grid"] = {
-				Enabled = true,
-				Priority = 20,
-			},
-			["Hover"] = {
-				Enabled = true,
-				Priority = 20,
-			},
+			-- ["Grid"] = {
+			-- 	Enabled = true,
+			-- 	Priority = 20,
+			-- },
+			-- ["Hover"] = {
+			-- 	Enabled = true,
+			-- 	Priority = 20,
+			-- },
 			["Garden"] = {
 				Enabled = true,
 				Priority = 20,

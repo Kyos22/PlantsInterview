@@ -12,6 +12,16 @@ type version = i32
 
 
 
+scope Profile {
+    type isAsync = boolean    
+
+    function Get {
+        Yield: Future,
+        Data: isAsync,
+        Return: (data, version?),
+    }
+
+}
 
 
 ----PlayerProfile
@@ -37,11 +47,23 @@ function Preload {
 --  Garden
 scope Garden {
     type slot = u16
+    type plant = string
+    struct pos {
+        cx: u8?,
+        cz: u8?
+    }
 
     event Init {
         From: Server,
         Type: Reliable,
         Call: ManyAsync,
         Data: slot,
+    }
+
+    event Sow {
+        From: Client,
+        Type: Reliable,
+        Call: ManyAsync,
+        Data: (plant, pos),
     }
 }

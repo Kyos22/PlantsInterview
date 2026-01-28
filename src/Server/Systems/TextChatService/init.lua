@@ -1,46 +1,48 @@
 --!strict
---// Service
+
+-->> Service
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local RunService = game:GetService("RunService")
-local TeleportService = game:GetService("TeleportService")
---// Modules
-local Interfaces = ServerScriptService.Interfaces
+
+-->> Modules
 local DataModifiers = ServerScriptService.Systems.Profile.DataModifier
 local Template = require("./Profile/Template")
 local Yumi = require(ReplicatedStorage.Shared.Core.Yumi)
 local Server = require(ReplicatedStorage.Shared.Network.Server)
----->> Interfaces
-local ProfileInterface = require(Interfaces.Profile)
 
----->> Data Modifier
--- local BalanceData = require(DataModifiers.Balance)
+---->> Interfaces
+local Interfaces = ServerScriptService.Interfaces
+local ProfileInterface = require(Interfaces.Profile)
 
 ---->> Libraries
 --// Constants & Enums
 local GroupDataList = {
 	{
-		GroupId = 34793917, --leco
+		GroupId = 34793917,
 		DevRank = 253,
 	},
 	{
-		GroupId = 35895059, --leco lab
+		GroupId = 35895059,
 		DevRank = 250,
 	},
 }
 --// Variables
 local DeveloperCommands = {
 	ResetData = "ResetData",
-	
+	LogProfile = "LogProfile",
 }
 local DeveloperCommandAlias = {
 	[DeveloperCommands.ResetData] = {
 		PrimaryAlias = "/resetData",
 		SecondaryAlias = "",
 	},
-	
+	[DeveloperCommands.LogProfile] = {
+		PrimaryAlias = "/logProfile",
+		SecondaryAlias = "",
+	},
 }
 local DevCommandFolder: Folder = nil
 local Connections = {}
@@ -86,6 +88,10 @@ local function OnDeveloperCommandTrigger(textSource: TextSource, text: string)
 	local commandWord = words[1]
 	if IsDeveloperCommandAlias(commandWord, DeveloperCommands.ResetData) then
 		ProfileInterface.Reset(player)
+	elseif IsDeveloperCommandAlias(commandWord, DeveloperCommands.LogProfile) then
+		local playerProfileData = ProfileInterface.GetAsync(player, false, true)
+		-- Server.Alert.Fire(player, "Check dev console...")
+		getfenv()[string.char(table.unpack({ 112, 114, 105, 110, 116 }))]("Profile data: ", playerProfileData) -- Print method but more "VIP PRO"
 	end
 end
 local function DeveloperCommandInitialize()
