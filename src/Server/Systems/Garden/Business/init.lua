@@ -94,9 +94,9 @@ function module.methods.Initialize(self: Type)
         -- Tính toán lại vị trí World
         local snappedWorld = GridUtil.CellToWorldCenter(self.Land.Soil1, self.cellSize, cx, cz)
         local plantLibrary = PLANTS.Data[data.Name]
-
+        print("dd", plantLibrary.GrowthDuration)
         local config = {
-            Duration = plantLibrary.GrowthTime or 15,
+            Duration = plantLibrary.GrowthDuration or 15,
             Pos = { cx = cx, cz = cz },
             Name = data.Name,
             Model = self.GardenModel,
@@ -157,9 +157,9 @@ function module.methods.Grid(self: Type, cx: number, cz: number,namePlant:string
     if self.cellSize and typeof(self.cellSize) == "number" then
         local snappedWorld = GridUtil.CellToWorldCenter(self.Land.Soil1, self.cellSize, cx, cz)
         local data = PLANTS.Data[namePlant]
-        print("snapp",snappedWorld)
+        print("snapp",snappedWorld,data)
         local config = {
-            Duration = 15,
+            Duration = data.GrowthDuration,
             Pos = {
                 cx = cx,
                 cz = cz,

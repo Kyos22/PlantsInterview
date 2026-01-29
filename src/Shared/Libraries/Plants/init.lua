@@ -10,7 +10,7 @@ local Data = {
     },
     ["Corn"] = {
         Name = "Corn",
-        GrowthDuration = 5,
+        GrowthDuration = 10,
         Exp = 1,
         Coins = 10,
         ImageId = "rbxassetid://111573557056660"

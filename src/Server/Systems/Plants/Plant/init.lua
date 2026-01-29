@@ -7,9 +7,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Assets = ReplicatedStorage.Shared.Assets
 local PLANTS_MODEL = Assets.Models.Plants
 local VISUAL = workspace.Visual
-local PLANTS = require(ReplicatedStorage.Shared.Libraries.Plants)
 local TEMPLATE = {
-    BillboardPlant = ReplicatedStorage.Assets.Display.Template.Plant.CooldownPlant
+    BillboardPlant = ReplicatedStorage.Assets.Display.Template.Plant.CooldownPlant,
+    Harvest = ReplicatedStorage.Assets.Display.Template.Plant.Harvest
 }
 
 local module = {}
@@ -51,25 +51,33 @@ end
 module.constructors.metatable = module.metatable
 module.constructors.methods = module.methods
 module.constructors.private = {}
+-->> Private functon
+local function CreateRoot(cx:number, cz:number, pos):Part
+    local root = Instance.new("Part")
+    root.Name = "TreeRoot_" .. cx .. "_" .. cz
+    root.Size = Vector3.new(1, 1, 1)
+    root.Transparency = 1
+    root.Anchored = true
+    root.CanCollide = false
+    root.CFrame = CFrame.new(pos)
+    root.Parent = VISUAL
 
-function module.methods.StartCountdown(self: Type, duration: number, displayLabel: TextLabel)
+    return root
+end
+
+-- Public function
+function module.methods.StartCountdown(self: Type, duration: number,startTime:number, displayLabel: TextLabel)
     task.spawn(function()
-        local startTick = os.time()
-        
         while true do
-            local elapsed = os.time() - startTick
+            local elapsed = os.time() - startTime
             local remaining = duration - elapsed
-            
             if remaining <= 0 then
                 displayLabel.Text = "0.0"
-                -- Gọi hàm xử lý khi cây chín ở đây (ví dụ: self:OnMatured())
                 break
             end
             
             displayLabel.Text = string.format("%.1f", remaining)
             
-            -- Đợi một khoảng thời gian ngắn hơn bước nhảy (0.1s) 
-            -- để đảm bảo UI cập nhật mượt mà
             task.wait(0.05) 
         end
     end)
@@ -93,7 +101,6 @@ end
 
 ---->> Private Functions
 
----->> APIs
 function module.methods.Initialize(self: Type)
     self:Growth(self.Pos.cx, self.Pos.cz, self.Name, self.StartTime, self.SnappedWorld)
 end
@@ -120,54 +127,61 @@ function module.methods.Destroy(self: Type)
 
     table.clear(self :: any)
 end
+
 function module.methods.Growth(self: Type, cx:number,cz:number, plant:string, startTime: number, pos)
     local stages = PLANTS_MODEL[plant]:GetChildren()
     table.sort(stages, function(a,b)
         return tonumber(a.Name) < tonumber(b.Name)
     end)
 
-    local root = Instance.new("Part")
-    root.Name = "TreeRoot_" .. cx .. "_" .. cz
-    root.Size = Vector3.new(1, 1, 1)
-    root.Transparency = 1
-    root.Anchored = true
-    root.CanCollide = false
-    root.CFrame = CFrame.new(pos)
-    root.Parent = VISUAL
+    local root = CreateRoot(cx, cz, pos)
 
     local template = TEMPLATE.BillboardPlant:Clone()
     template.Name = plant
     template.Parent = root
     local timeLabel = template.Time :: TextLabel
-    self:StartCountdown(self.Duration, timeLabel)
+    self:StartCountdown(self.Duration,startTime, timeLabel)
 
     task.spawn(function()
         local currentModel: Model? = nil
-
+        local totalStages = #stages
+        local growthStagesCount = totalStages - 1 
+        local stageInterval = self.Duration / growthStagesCount
+       
         while true do
-            local elapsed = os.time() - startTime
-            -- Giả sử mỗi Stage cách nhau 3 giây
-            local currentStageIndex = math.floor(elapsed / 3) + 1
-            currentStageIndex = math.min(currentStageIndex, #stages)
+            local now = os.time()
+            local elapsed = now - startTime
+            local currentStageIndex = 1
 
-            -- Cập nhật Model nếu chuyển sang Stage mới
+            if elapsed >= self.Duration then
+                currentStageIndex = totalStages
+            else
+                local calculated = math.floor(elapsed / stageInterval) + 1
+                currentStageIndex = math.clamp(calculated, 1, growthStagesCount)
+            end
+
             if not currentModel or currentModel:GetAttribute("Stage") ~= currentStageIndex then
                 if currentModel then currentModel:Destroy() end
                 
                 currentModel = stages[currentStageIndex]:Clone()
-                if not currentModel then
-                    return
+                if currentModel then
+                    currentModel:SetAttribute("Stage", currentStageIndex)
+                    currentModel:PivotTo(CFrame.new(pos))
+                    currentModel.Parent = root 
                 end
-                currentModel:SetAttribute("Stage", currentStageIndex)
-                currentModel:PivotTo(CFrame.new(pos))
-                currentModel.Parent = VISUAL -- Hoặc folder riêng
             end
 
-            -- Nếu đã đạt Stage cuối thì thoát vòng lặp
-            if currentStageIndex >= #stages then break end
-            
-            task.wait(5) -- Kiểm tra lại sau mỗi 5s
+            if currentStageIndex == totalStages then break end
+            task.wait(1)
         end
+
+        -- Handle Trigger
+        local proximityPrompt = TEMPLATE.Harvest:Clone() :: ProximityPrompt
+        proximityPrompt.Parent = currentModel
+        proximityPrompt.Triggered:Connect(function()
+            print("click")
+        end)
+
     end)
 end
 
