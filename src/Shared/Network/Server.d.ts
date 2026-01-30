@@ -26,6 +26,7 @@ export declare const Preload: {
 export declare namespace Garden {
 	type slot = number
 	type plant = string
+	type quantity = number
 	type pos = { cx?: number | undefined, cz?: number | undefined }
 	export const Init: {
 		Fire: (Player: Player, Value: number) => void
@@ -35,5 +36,11 @@ export declare namespace Garden {
 	}
 	export const Sow: {
 		On: (Listener: (Player: Player, Value1: string, Value2: { cx?: number | undefined, cz?: number | undefined }) => void) => (() => void)
+	}
+	export const Harvest: {
+		Fire: (Player: Player, Value1: string, Value2: number) => void
+		FireAll: (Value1: string, Value2: number) => void
+		FireExcept: (Except: Player, Value1: string, Value2: number) => void
+		FireList: (List: Player[], Value1: string, Value2: number) => void
 	}
 }

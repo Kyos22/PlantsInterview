@@ -96,6 +96,7 @@ function module.methods.Initialize(self: Type)
         local plantLibrary = PLANTS.Data[data.Name]
         print("dd", plantLibrary.GrowthDuration)
         local config = {
+            Player = self.Player,
             Duration = plantLibrary.GrowthDuration or 15,
             Pos = { cx = cx, cz = cz },
             Name = data.Name,
@@ -159,6 +160,7 @@ function module.methods.Grid(self: Type, cx: number, cz: number,namePlant:string
         local data = PLANTS.Data[namePlant]
         print("snapp",snappedWorld,data)
         local config = {
+            Player = self.Player,
             Duration = data.GrowthDuration,
             Pos = {
                 cx = cx,

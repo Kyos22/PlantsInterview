@@ -2,7 +2,11 @@
 
 -->> Services 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
+local Server = require(ReplicatedStorage.Shared.Network.Server)
+local ServerScriptService = game:GetService("ServerScriptService")
+-->> Modules
+local Data = require(ServerScriptService.Systems.Profile)
+local PlantModifier = require(ServerScriptService.Systems.Profile.DataModifier.Plant)
 -->> Refs
 local Assets = ReplicatedStorage.Shared.Assets
 local PLANTS_MODEL = Assets.Models.Plants
@@ -20,6 +24,7 @@ module.metatable = { __index = module.methods }
 
 ----> Constructor
 export type Config = {
+    Player: Player,
     Duration: number,
     Pos : {
         cx : number,
@@ -86,6 +91,7 @@ end
 function module.constructors.new(config: Config)
     local self = setmetatable(prototype({} :: any, config), module.metatable)
 
+    self.Player = config.Player
     self.Duration = config.Duration
     self.Pos = {
         cx = config.Pos.cx,
@@ -179,7 +185,14 @@ function module.methods.Growth(self: Type, cx:number,cz:number, plant:string, st
         local proximityPrompt = TEMPLATE.Harvest:Clone() :: ProximityPrompt
         proximityPrompt.Parent = currentModel
         proximityPrompt.Triggered:Connect(function()
-            print("click")
+            if currentModel then
+                currentModel:Destroy()
+            end
+            local data = Data.GetAsync(self.Player, true, true)
+            if data then
+               PlantModifier.Add(data, 1, plant)
+            end
+            Server.Garden.Harvest.Fire(self.Player, plant, 1)
         end)
 
     end)

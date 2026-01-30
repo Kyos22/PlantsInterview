@@ -23,11 +23,15 @@ export declare const Preload: {
 export declare namespace Garden {
 	type slot = number
 	type plant = string
+	type quantity = number
 	type pos = { cx?: number | undefined, cz?: number | undefined }
 	export const Init: {
 		On: (Listener: (Value: number) => void) => (() => void)
 	}
 	export const Sow: {
 		Fire: (Value1: string, Value2: { cx?: number | undefined, cz?: number | undefined }) => void
+	}
+	export const Harvest: {
+		On: (Listener: (Value1: string, Value2: number) => void) => (() => void)
 	}
 }

@@ -48,6 +48,7 @@ function Preload {
 scope Garden {
     type slot = u16
     type plant = string
+    type quantity = u8
     struct pos {
         cx: u8?,
         cz: u8?
@@ -65,5 +66,12 @@ scope Garden {
         Type: Reliable,
         Call: ManyAsync,
         Data: (plant, pos),
+    }
+
+    event Harvest {
+        From: Server,
+        Type: Reliable,
+        Call: ManyAsync,
+        Data: (plant, quantity),
     }
 }

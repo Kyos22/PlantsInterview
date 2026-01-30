@@ -36,6 +36,7 @@ local ProfileInterface = require(ReplicatedStorage.Controllers.Interfaces.Profil
 
 -->> Types
 type Profile = ProfileInterface.Profile
+
 export type PrivateField = super.PrivateField & {
 	profileInitialized: boolean,
 
@@ -48,6 +49,7 @@ local function prototype(self: Type, system: any)
 	self.UI = DisplayHelper:CloneSingleton(UI) :: typeof(UI)
 	self.Holder = self.UI.Frame.Holder
 	---->> Private Properties
+	self.PlantInventory = {} :: PlantInventory
 	
 	return self
 end
@@ -65,7 +67,7 @@ function module.methods.Initialize(self: Type)
 		end
 		_p.profileInitialized = true
 
-		self:RenderCard(profile.Inventory.Plants)
+		self:RenderCard(profile.Inventory.Seeds)
 		-- self:UpdateAsProfile(profile)
 	end)
 	self:Setup()
@@ -82,6 +84,7 @@ function module.methods.RenderCard(self: Type,plants)
 	for key, data in pairs(plants) do
 		local plantData = PLANTS.Data[key]
 		if not plantData then continue end
+
 		local template = TEMPLATE_HOTBAR.Template:Clone()
 		template.Name = key
 
@@ -91,7 +94,7 @@ function module.methods.RenderCard(self: Type,plants)
 		local button = template.Hitbox :: TextButton
 
 		sprite.Image = plantData.ImageId
-		name.Text = key
+		name.Text = key .. " seed" 
 		quantity.Text = tostring(data.Quantity)
 		template.Parent = self.Holder
 

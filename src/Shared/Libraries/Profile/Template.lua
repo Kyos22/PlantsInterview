@@ -16,10 +16,15 @@ export type Profile = {
 		Money: number,
 	},
 	Inventory: {
-		Plants : {
+		Seeds : {
 			[string]: {
 				Quantity: number,
 			},
+		},
+		Plants : {
+			[string] : {
+				Quantity: number,
+			}
 		}
 	},
 	Garden : {
@@ -72,14 +77,19 @@ local Template: Profile = {
 		FamousPoint = 0,
 	},
 	Inventory = {
-		Plants = {
+		Seeds = {
 			["Corn"] = {
 				Quantity = 100,
 			},
 			["Tomato"] = {
 				Quantity = 100,
 			}
-		}
+		},
+		Plants = {
+			["Corn"] = {
+				Quantity = 50,
+			},
+		},
 	},
 	Garden = {
 		Slot = {}
