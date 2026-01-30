@@ -1,5 +1,13 @@
 local Plants = {}
 
+export type PlantData = {
+    Name: string,
+    GrowthDuration: number,
+    Exp: number,
+    Coins: number,
+    ImageId: string,
+}
+
 local Data = {
     ["Wheat"] = {
         Name = "Wheat",
@@ -17,30 +25,13 @@ local Data = {
     },
     ["Tomato"] = {
         Name = "Tomato",
-        GrowthDuration = 10,
+        GrowthDuration = 20,
         Exp = 1,
         Coins = 15,
         ImageId = "rbxassetid://104370715295665",
     },
-    -- ["Corn"] = {
-
-    -- },
-    -- ["Potato"] = {
-
-    -- },
-    -- ["Carrot"] = {
-
-    -- },
-    -- ["Tomato"] = {
-
-    -- },
-    -- ["Onion"] = {
-
-    -- },
-    -- ["Cabbage"] = {
-
-    -- },
-}
+   
+} :: {PlantData}
 
 Plants.Data = Data
 

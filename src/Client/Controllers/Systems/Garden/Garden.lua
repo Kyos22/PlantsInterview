@@ -171,8 +171,10 @@ function module.methods.Click(self: Type,screenPos: Vector2?)
             cx = cx,
             cz = cz,
         })
-
-		DrawMarker(snappedWorld)
+        GardenObserver.Fire(GardenObserver.Event.Sow, {
+            Name = selectedPlant,
+        })
+		-- DrawMarker(snappedWorld)
 	end
 end
 

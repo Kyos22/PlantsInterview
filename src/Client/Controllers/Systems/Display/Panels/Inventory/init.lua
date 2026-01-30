@@ -18,6 +18,7 @@ local Core = Shared.Core
 local Packages = ReplicatedStorage.Packages
 local PLANTS = require(ReplicatedStorage.Shared.Libraries.Plants)
 
+
 ---->> Utils
 local Utils = require(Core.Utils)
 local DisplayHelper = require(Core.Utils.DisplayHelper)
@@ -76,7 +77,6 @@ function module.methods.Initialize(self: Type)
 		print("harvest",plant,quantity)
 		self:Add(plant, quantity)
 	end)
-
 end
 
 --// Private Functions

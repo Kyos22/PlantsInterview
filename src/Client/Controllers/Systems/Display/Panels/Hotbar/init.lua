@@ -9,6 +9,8 @@ setmetatable(module.methods, super.metatable)
 -->> Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+-->> Observers
+local GardenObserver = require(ReplicatedStorage.Controllers.Observers.Garden)
 
 -->> Modules
 local Shared = ReplicatedStorage.Shared
@@ -36,6 +38,14 @@ local ProfileInterface = require(ReplicatedStorage.Controllers.Interfaces.Profil
 
 -->> Types
 type Profile = ProfileInterface.Profile
+type PlantSlot = {
+    Template: Frame, 
+    Quantity: number,
+}
+
+type SeedInventory = {
+    [string]: PlantSlot
+}
 
 export type PrivateField = super.PrivateField & {
 	profileInitialized: boolean,
@@ -49,7 +59,7 @@ local function prototype(self: Type, system: any)
 	self.UI = DisplayHelper:CloneSingleton(UI) :: typeof(UI)
 	self.Holder = self.UI.Frame.Holder
 	---->> Private Properties
-	self.PlantInventory = {} :: PlantInventory
+	self.SeedInventory = {} :: SeedInventory
 	
 	return self
 end
@@ -66,11 +76,15 @@ function module.methods.Initialize(self: Type)
 			return
 		end
 		_p.profileInitialized = true
-
+		self.Data = profile
 		self:RenderCard(profile.Inventory.Seeds)
 		-- self:UpdateAsProfile(profile)
 	end)
 	self:Setup()
+	GardenObserver.Subscribe(GardenObserver.Event.Sow, function(args)
+		print("sow",args)
+		self:Subtract(args.Name, 1)
+	end)
 end
 
 --// Private Functions
@@ -80,31 +94,107 @@ local WrapDebounce = super.private.WrapDebounce
 local WrapHover = super.private.WrapHover
 
 --// Public Functions
-function module.methods.RenderCard(self: Type,plants)
-	for key, data in pairs(plants) do
-		local plantData = PLANTS.Data[key]
-		if not plantData then continue end
+-- function module.methods.RenderCard(self: Type,plants)
+-- 	for key, data in pairs(plants) do
+-- 		local plantData = PLANTS.Data[key]
+-- 		if not plantData then continue end
 
-		local template = TEMPLATE_HOTBAR.Template:Clone()
-		template.Name = key
+-- 		local template = TEMPLATE_HOTBAR.Template:Clone()
+-- 		template.Name = key
+
+-- 		local sprite = template.Sprite :: ImageLabel
+-- 		local name = template.NamePlant :: TextLabel
+-- 		local quantity = template.Quantity :: TextLabel
+-- 		local button = template.Hitbox :: TextButton
+
+-- 		sprite.Image = plantData.ImageId
+-- 		name.Text = key .. " seed" 
+-- 		quantity.Text = tostring(data.Quantity)
+-- 		template.Parent = self.Holder
+
+-- 		WrapHover(self,template)
+
+-- 		WrapLemon(self, button.Activated, WrapDebounce(self, function()
+-- 			print("plant",key)
+-- 			self.SelectPlant.Value = key
+-- 		end))
+-- 	end
+-- end
+function module.methods.RenderCard(self: Type)
+	if not self.Data or not self.Data.Inventory.Seeds then return end
+	
+	for plant, data in pairs(self.Data.Inventory.Seeds) do
+		self:UpdateOrCreateInfo(plant, data.Quantity)
+	end
+	print("SeedsInventory",self.SeedInventory)
+end
+
+function module.methods.UpdateOrCreateInfo(self: Type,plantName: string, quantity: number)
+	print("qua",quantity)
+	local plantData = PLANTS.Data[plantName]
+	if not plantData then return end
+	
+	local slot = self.SeedInventory[plantName]
+    local template
+
+	if not slot then
+		template = TEMPLATE_HOTBAR.Template:Clone()
+		template.Name = plantName
 
 		local sprite = template.Sprite :: ImageLabel
 		local name = template.NamePlant :: TextLabel
-		local quantity = template.Quantity :: TextLabel
+		local quantityLabel = template.Quantity :: TextLabel
 		local button = template.Hitbox :: TextButton
 
+		self.SeedInventory[plantName] = {
+            Template = template,
+            Quantity = quantity
+        }
+
 		sprite.Image = plantData.ImageId
-		name.Text = key .. " seed" 
-		quantity.Text = tostring(data.Quantity)
+		name.Text = plantName .. " seed" 
+		quantityLabel.Text = tostring(quantity)
 		template.Parent = self.Holder
 
 		WrapHover(self,template)
 
 		WrapLemon(self, button.Activated, WrapDebounce(self, function()
-			print("plant",key)
-			self.SelectPlant.Value = key
+			print("plant",plantName)
+			self.SelectPlant.Value = plantName
 		end))
+	else
+		template = slot.Template
+		slot.Quantity = quantity
+
+		local quantityText = template.Quantity :: TextLabel
+		quantityText.Text = tostring(quantity)
 	end
+
+	-- for key, data in pairs(plants) do
+	-- 	local plantData = PLANTS.Data[key]
+	-- 	if not plantData then continue end
+
+
+	-- 	-- local template = TEMPLATE_HOTBAR.Template:Clone()
+	-- 	-- template.Name = key
+
+	-- 	-- local sprite = template.Sprite :: ImageLabel
+	-- 	-- local name = template.NamePlant :: TextLabel
+	-- 	-- local quantity = template.Quantity :: TextLabel
+	-- 	-- local button = template.Hitbox :: TextButton
+
+	-- 	-- sprite.Image = plantData.ImageId
+	-- 	-- name.Text = key .. " seed" 
+	-- 	-- quantity.Text = tostring(data.Quantity)
+	-- 	-- template.Parent = self.Holder
+
+	-- 	-- WrapHover(self,template)
+
+	-- 	-- WrapLemon(self, button.Activated, WrapDebounce(self, function()
+	-- 	-- 	print("plant",key)
+	-- 	-- 	self.SelectPlant.Value = key
+	-- 	-- end))
+	-- end
 end
 
 function module.methods.Setup(self: Type)
@@ -118,7 +208,33 @@ function module.methods.Setup(self: Type)
 end
 
 function module.methods.Add(self: Type, plant: string, quantity: number)
-	
+	if not plant or type(plant) ~= "string" then return end
+    
+    local currentQuantity = 0
+    if self.SeedInventory[plant] then
+        currentQuantity = self.SeedInventory[plant].Quantity
+    end
+    
+    local newTotal = currentQuantity + quantity
+    
+    self:UpdateOrCreateInfo(plant, newTotal)
+    
+    print(string.format("Updated %s: %d -> %d", plant, currentQuantity, newTotal))
+end
+
+function module.methods.Subtract(self: Type, plant: string, quantity: number)
+	if not plant or type(plant) ~= "string" then return end
+    print("qq")
+    local currentQuantity = 0
+    if self.SeedInventory[plant] then
+        currentQuantity = self.SeedInventory[plant].Quantity
+    end
+    
+    local newTotal = currentQuantity - quantity
+    
+    self:UpdateOrCreateInfo(plant, newTotal)
+    
+    print(string.format("Updated %s: %d -> %d", plant, currentQuantity, newTotal))
 end
 
 function module.methods.Open(self: Type, isAnimated: boolean?)
